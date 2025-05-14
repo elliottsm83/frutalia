@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Frutalia | Pedido de Jugos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frutalia | Pedidos de Jugos</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #fefefe;
+      font-family: sans-serif;
+      background: #f0fff4;
       margin: 0;
       padding: 20px;
     }
@@ -20,30 +20,30 @@
       margin: auto;
       background: #fff;
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     label {
       display: block;
-      margin: 12px 0 4px;
+      margin: 10px 0 5px;
       font-weight: bold;
     }
     input, select, textarea {
       width: 100%;
       padding: 10px;
-      margin-bottom: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      margin-bottom: 15px;
     }
     button {
       background: #28a745;
       color: white;
       border: none;
       padding: 12px;
-      border-radius: 8px;
+      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
       width: 100%;
-      font-size: 16px;
     }
     button:hover {
       background: #218838;
@@ -51,52 +51,42 @@
     #mensaje {
       text-align: center;
       margin-top: 20px;
-      font-weight: bold;
       color: green;
-    }
-    #pedidos {
-      max-width: 700px;
-      margin: 40px auto;
+      font-weight: bold;
     }
     .pedido {
-      background: #e8f5e9;
+      background: #e6ffe9;
+      border-left: 5px solid #28a745;
+      margin: 10px auto;
       padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #c8e6c9;
-    }
-    @media (max-width: 600px) {
-      form, #pedidos {
-        width: 95%;
-      }
+      max-width: 600px;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
-
-  <h1>🧃 Frutalia 🍊</h1>
-  <h2>Haz tu pedido y recógelo en 10 minutos</h2>
+  <h1>🍹 Frutalia</h1>
+  <h2>Pide tu jugo y recógelo en 10 minutos</h2>
 
   <form id="pedidoForm">
     <label for="nombre">Nombre del cliente</label>
-    <input type="text" id="nombre" name="nombre" required />
+    <input type="text" id="nombre" name="nombre" required>
 
     <label for="telefono">Teléfono</label>
-    <input type="tel" id="telefono" name="telefono" required />
+    <input type="tel" id="telefono" name="telefono" required>
 
     <label for="sabor">Sabor del jugo</label>
     <select id="sabor" name="sabor" required>
-      <option value="">Selecciona un sabor</option>
+      <option value="">Selecciona</option>
       <option value="naranja">Naranja</option>
       <option value="mango">Mango</option>
       <option value="fresa">Fresa</option>
       <option value="piña">Piña</option>
-       <option value="piña">Melón</option>
     </select>
 
     <label for="tamano">Tamaño</label>
     <select id="tamano" name="tamano" required>
-      <option value="">Selecciona un tamaño</option>
+      <option value="">Selecciona</option>
       <option value="chico">Chico</option>
       <option value="mediano">Mediano</option>
       <option value="grande">Grande</option>
@@ -109,28 +99,19 @@
   </form>
 
   <div id="mensaje"></div>
-
-  <div id="pedidos">
-    <h2>📋 Pedidos Registrados</h2>
-    <div id="listaPedidos"></div>
-  </div>
+  <div id="listaPedidos"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzaGUnVtqnvmEAJpvQ4CWT8FbCVLSlvn3dGVpebrJ5p7kOZWRhxqUywisqmZ1-w8bO0Ng/exec";
 
-    const form = document.getElementById("pedidoForm");
-    const mensaje = document.getElementById("mensaje");
-    const listaPedidos = document.getElementById("listaPedidos");
-
-    form.addEventListener("submit", function(e) {
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
       e.preventDefault();
-
       const datos = {
-        nombre: form.nombre.value,
-        telefono: form.telefono.value,
-        sabor: form.sabor.value,
-        tamano: form.tamano.value,
-        comentarios: form.comentarios.value
+        nombre: document.getElementById("nombre").value,
+        telefono: document.getElementById("telefono").value,
+        sabor: document.getElementById("sabor").value,
+        tamano: document.getElementById("tamano").value,
+        comentarios: document.getElementById("comentarios").value
       };
 
       fetch(API_URL, {
@@ -140,47 +121,49 @@
           "Content-Type": "application/json"
         }
       })
-      .then(res => res.json())
+      .then(r => r.json())
       .then(res => {
         if (res.status === "success") {
-          mensaje.textContent = "Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos. ¡Frutalia agradece tu preferencia!";
-          form.reset();
-          obtenerPedidos();
+          document.getElementById("mensaje").innerText = "Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos. ¡Frutalia agradece tu preferencia!";
+          document.getElementById("pedidoForm").reset();
+          cargarPedidos();
         } else {
-          mensaje.textContent = "Error al enviar el pedido. Inténtalo nuevamente.";
+          document.getElementById("mensaje").innerText = "Hubo un error: " + (res.message || "intenta de nuevo.");
         }
       })
       .catch(err => {
         console.error(err);
-        mensaje.textContent = "Ocurrió un error al conectar con el servidor.";
+        document.getElementById("mensaje").innerText = "Error al conectar con el servidor.";
       });
     });
 
-    function obtenerPedidos() {
+    function cargarPedidos() {
       fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-          listaPedidos.innerHTML = "";
-          data.reverse().forEach(pedido => {
+        .then(r => r.json())
+        .then(pedidos => {
+          const contenedor = document.getElementById("listaPedidos");
+          contenedor.innerHTML = "";
+          pedidos.reverse().forEach(p => {
             const div = document.createElement("div");
             div.className = "pedido";
             div.innerHTML = `
-              <strong>${pedido['Nombre del cliente']}</strong> pidió un jugo de <em>${pedido['Sabor del jugo']}</em> tamaño <em>${pedido['Tamaño']}</em><br/>
-              📞 ${pedido['Teléfono']}<br/>
-              Comentarios: ${pedido['Comentarios adicionales'] || "Ninguno"}<br/>
-              🕒 ${new Date(pedido.Fecha).toLocaleString()}
+              <strong>${p["Nombre del cliente"]}</strong> pidió <em>${p["Sabor del jugo"]}</em> (${p["Tamaño"]})<br>
+              Tel: ${p["Teléfono"]} <br>
+              Comentarios: ${p["Comentarios adicionales"] || "Ninguno"}<br>
+              Fecha: ${new Date(p["Fecha"]).toLocaleString()}
             `;
-            listaPedidos.appendChild(div);
+            contenedor.appendChild(div);
           });
         })
         .catch(err => {
-          console.error("Error al obtener pedidos:", err);
-          listaPedidos.innerHTML = "<p>No se pudieron cargar los pedidos.</p>";
+          console.error(err);
+          document.getElementById("listaPedidos").innerHTML = "<p>Error al cargar los pedidos.</p>";
         });
     }
 
-    obtenerPedidos(); // cargar al iniciar
+    cargarPedidos();
   </script>
 </body>
 </html>
+
 
