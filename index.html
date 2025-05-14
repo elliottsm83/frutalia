@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frutalia - Pedidos de Jugos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdfdfd;
+      color: #333;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    main {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      color: #e67e22;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    input, select, textarea, button {
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #219150;
+    }
+
+    .oculto {
+      display: none;
+    }
+
+    #mensajeExito {
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    #listaPedidos {
+      margin-top: 1rem;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Frutalia 🍊</h1>
+    <p>Realiza tu pedido y pasa a recogerlo en 10 minutos</p>
+
+    <form id="pedidoForm">
+      <label for="nombre">Nombre del cliente:</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="telefono">Teléfono:</label>
+      <input type="tel" id="telefono" name="telefono" required />
+
+      <label for="sabor">Sabor del jugo:</label>
+      <select id="sabor" name="sabor" required>
+        <option value="">Selecciona un sabor</option>
+        <option value="naranja">Naranja</option>
+        <option value="mango">Mango</option>
+        <option value="fresa">Fresa</option>
+        <option value="piña">Piña</option>
+      </select>
+
+      <label for="tamano">Tamaño:</label>
+      <select id="tamano" name="tamano" required>
+        <option value="">Selecciona un tamaño</option>
+        <option value="chico">Chico</option>
+        <option value="mediano">Mediano</option>
+        <option value="grande">Grande</option>
+      </select>
+
+      <label for="comentarios">Comentarios adicionales:</label>
+      <textarea id="comentarios" name="comentarios"></textarea>
+
+      <button type="submit">Enviar Pedido</button>
+    </form>
+
+    <div id="mensajeExito" class="oculto">
+      <p>Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos.<br>¡Frutalia agradece tu preferencia! 🍍</p>
+    </div>
+
+    <section id="pedidosGuardados">
+      <h2>Pedidos Registrados</h2>
+      <div id="listaPedidos"></div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("pedidoForm");
+    const mensaje = document.getElementById("mensajeExito");
+    const listaPedidos = document.getElementById("listaPedidos");
+
+    const API_URL = "https://script.google.com/macros/s/AKfycbzaGUnVtqnvmEAJpvQ4CWT8FbCVLSlvn3dGVpebrJ5p7kOZWRhxqUywisqmZ1-w8bO0Ng/exec";
+
+    // Envío del formulario
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const datos = {
+        nombre: form.nombre.value,
+        telefono: form.telefono.value,
+        sabor: form.sabor.value,
+        tamano: form.tamano.value,
+        comentarios: form.comentarios.value
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(datos),
+          headers: { "Content-Type": "application/json" }
+        });
+
+        const json = await res.json();
+        if (json.status === "success") {
+          mensaje.classList.remove("oculto");
+          form.reset();
+          cargarPedidos(); // Actualiza la lista
+        } else {
+          alert("Error al enviar el pedido.");
+        }
+      } catch (error) {
+        alert("Ocurrió un error al conectar con el servidor.");
+        console.error(error);
+      }
+    });
+
+    // Cargar pedidos ya registrados
+    async function cargarPedidos() {
+      try {
+        const res = await fetch(API_URL);
+        const pedidos = await res.json();
+
+        listaPedidos.innerHTML = "";
+        pedidos.reverse().forEach(p => {
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <strong>${p["Nombre del cliente"]}</strong> pidió un jugo de <em>${p["Sabor del jugo"]}</em> tamaño <em>${p["Tamaño"]}</em><br>
+            Comentarios: ${p["Comentarios adicionales"] || "Ninguno"}<br>
+            <small>📞 ${p["Teléfono"]} — ${new Date(p["Fecha y hora"]).toLocaleString()}</small>
+            <hr>
+          `;
+          listaPedidos.appendChild(div);
+        });
+      } catch (error) {
+        listaPedidos.innerHTML = "<p>Error al cargar pedidos.</p>";
+        console.error(error);
+      }
+    }
+
+    window.onload = cargarPedidos;
+  </script>
+</body>
+</html>
