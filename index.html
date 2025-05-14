@@ -2,134 +2,126 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frutalia - Pedidos de Jugos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frutalia | Pedido de Jugos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fdfdfd;
-      color: #333;
+      background: #fefefe;
       margin: 0;
-      padding: 1rem;
+      padding: 20px;
     }
-
-    main {
-      max-width: 600px;
-      margin: auto;
-    }
-
     h1, h2 {
-      color: #e67e22;
       text-align: center;
+      color: #28a745;
     }
-
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 1rem;
+      max-width: 500px;
+      margin: auto;
       background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    input, select, textarea, button {
-      padding: 8px;
-      font-size: 1rem;
+    label {
+      display: block;
+      margin: 12px 0 4px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
     }
-
     button {
-      background-color: #27ae60;
+      background: #28a745;
       color: white;
       border: none;
+      padding: 12px;
+      border-radius: 8px;
       cursor: pointer;
+      width: 100%;
+      font-size: 16px;
     }
-
     button:hover {
-      background-color: #219150;
+      background: #218838;
     }
-
-    .oculto {
-      display: none;
-    }
-
-    #mensajeExito {
-      background-color: #dff0d8;
-      color: #3c763d;
-      padding: 1rem;
-      border-radius: 5px;
-      margin-top: 1rem;
+    #mensaje {
       text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
     }
-
-    #listaPedidos {
-      margin-top: 1rem;
+    #pedidos {
+      max-width: 700px;
+      margin: 40px auto;
     }
-
-    hr {
-      border: none;
-      border-top: 1px solid #eee;
-      margin: 8px 0;
+    .pedido {
+      background: #e8f5e9;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #c8e6c9;
+    }
+    @media (max-width: 600px) {
+      form, #pedidos {
+        width: 95%;
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Frutalia 🍊</h1>
-    <p>Realiza tu pedido y pasa a recogerlo en 10 minutos</p>
 
-    <form id="pedidoForm">
-      <label for="nombre">Nombre del cliente:</label>
-      <input type="text" id="nombre" name="nombre" required />
+  <h1>🧃 Frutalia 🍊</h1>
+  <h2>Haz tu pedido y recógelo en 10 minutos</h2>
 
-      <label for="telefono">Teléfono:</label>
-      <input type="tel" id="telefono" name="telefono" required />
+  <form id="pedidoForm">
+    <label for="nombre">Nombre del cliente</label>
+    <input type="text" id="nombre" name="nombre" required />
 
-      <label for="sabor">Sabor del jugo:</label>
-      <select id="sabor" name="sabor" required>
-        <option value="">Selecciona un sabor</option>
-        <option value="naranja">Naranja</option>
-        <option value="mango">Mango</option>
-        <option value="fresa">Fresa</option>
-        <option value="piña">Piña</option>
-      </select>
+    <label for="telefono">Teléfono</label>
+    <input type="tel" id="telefono" name="telefono" required />
 
-      <label for="tamano">Tamaño:</label>
-      <select id="tamano" name="tamano" required>
-        <option value="">Selecciona un tamaño</option>
-        <option value="chico">Chico</option>
-        <option value="mediano">Mediano</option>
-        <option value="grande">Grande</option>
-      </select>
+    <label for="sabor">Sabor del jugo</label>
+    <select id="sabor" name="sabor" required>
+      <option value="">Selecciona un sabor</option>
+      <option value="naranja">Naranja</option>
+      <option value="mango">Mango</option>
+      <option value="fresa">Fresa</option>
+      <option value="piña">Piña</option>
+    </select>
 
-      <label for="comentarios">Comentarios adicionales:</label>
-      <textarea id="comentarios" name="comentarios"></textarea>
+    <label for="tamano">Tamaño</label>
+    <select id="tamano" name="tamano" required>
+      <option value="">Selecciona un tamaño</option>
+      <option value="chico">Chico</option>
+      <option value="mediano">Mediano</option>
+      <option value="grande">Grande</option>
+    </select>
 
-      <button type="submit">Enviar Pedido</button>
-    </form>
+    <label for="comentarios">Comentarios adicionales</label>
+    <textarea id="comentarios" name="comentarios" rows="3"></textarea>
 
-    <div id="mensajeExito" class="oculto">
-      <p>Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos.<br>¡Frutalia agradece tu preferencia! 🍍</p>
-    </div>
+    <button type="submit">Enviar Pedido</button>
+  </form>
 
-    <section id="pedidosGuardados">
-      <h2>Pedidos Registrados</h2>
-      <div id="listaPedidos"></div>
-    </section>
-  </main>
+  <div id="mensaje"></div>
+
+  <div id="pedidos">
+    <h2>📋 Pedidos Registrados</h2>
+    <div id="listaPedidos"></div>
+  </div>
 
   <script>
-    const form = document.getElementById("pedidoForm");
-    const mensaje = document.getElementById("mensajeExito");
-    const listaPedidos = document.getElementById("listaPedidos");
-
     const API_URL = "https://script.google.com/macros/s/AKfycbzaGUnVtqnvmEAJpvQ4CWT8FbCVLSlvn3dGVpebrJ5p7kOZWRhxqUywisqmZ1-w8bO0Ng/exec";
 
-    // Envío del formulario
-    form.addEventListener("submit", async (e) => {
+    const form = document.getElementById("pedidoForm");
+    const mensaje = document.getElementById("mensaje");
+    const listaPedidos = document.getElementById("listaPedidos");
+
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
 
       const datos = {
@@ -140,51 +132,54 @@
         comentarios: form.comentarios.value
       };
 
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify(datos),
-          headers: { "Content-Type": "application/json" }
-        });
-
-        const json = await res.json();
-        if (json.status === "success") {
-          mensaje.classList.remove("oculto");
-          form.reset();
-          cargarPedidos(); // Actualiza la lista
-        } else {
-          alert("Error al enviar el pedido.");
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(datos),
+        headers: {
+          "Content-Type": "application/json"
         }
-      } catch (error) {
-        alert("Ocurrió un error al conectar con el servidor.");
-        console.error(error);
-      }
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === "success") {
+          mensaje.textContent = "Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos. ¡Frutalia agradece tu preferencia!";
+          form.reset();
+          obtenerPedidos();
+        } else {
+          mensaje.textContent = "Error al enviar el pedido. Inténtalo nuevamente.";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        mensaje.textContent = "Ocurrió un error al conectar con el servidor.";
+      });
     });
 
-    // Cargar pedidos ya registrados
-    async function cargarPedidos() {
-      try {
-        const res = await fetch(API_URL);
-        const pedidos = await res.json();
-
-        listaPedidos.innerHTML = "";
-        pedidos.reverse().forEach(p => {
-          const div = document.createElement("div");
-          div.innerHTML = `
-            <strong>${p["Nombre del cliente"]}</strong> pidió un jugo de <em>${p["Sabor del jugo"]}</em> tamaño <em>${p["Tamaño"]}</em><br>
-            Comentarios: ${p["Comentarios adicionales"] || "Ninguno"}<br>
-            <small>📞 ${p["Teléfono"]} — ${new Date(p["Fecha y hora"]).toLocaleString()}</small>
-            <hr>
-          `;
-          listaPedidos.appendChild(div);
+    function obtenerPedidos() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          listaPedidos.innerHTML = "";
+          data.reverse().forEach(pedido => {
+            const div = document.createElement("div");
+            div.className = "pedido";
+            div.innerHTML = `
+              <strong>${pedido['Nombre del cliente']}</strong> pidió un jugo de <em>${pedido['Sabor del jugo']}</em> tamaño <em>${pedido['Tamaño']}</em><br/>
+              📞 ${pedido['Teléfono']}<br/>
+              Comentarios: ${pedido['Comentarios adicionales'] || "Ninguno"}<br/>
+              🕒 ${new Date(pedido.Fecha).toLocaleString()}
+            `;
+            listaPedidos.appendChild(div);
+          });
+        })
+        .catch(err => {
+          console.error("Error al obtener pedidos:", err);
+          listaPedidos.innerHTML = "<p>No se pudieron cargar los pedidos.</p>";
         });
-      } catch (error) {
-        listaPedidos.innerHTML = "<p>Error al cargar pedidos.</p>";
-        console.error(error);
-      }
     }
 
-    window.onload = cargarPedidos;
+    obtenerPedidos(); // cargar al iniciar
   </script>
 </body>
 </html>
+
