@@ -70,33 +70,33 @@
 
   <form id="pedidoForm">
     <label for="nombre">Nombre del cliente</label>
-    <input type="text" id="nombre" required>
+    <input type="text" id="nombre" name="nombre" required>
 
     <label for="telefono">Teléfono</label>
-    <input type="tel" id="telefono" required>
+    <input type="tel" id="telefono" name="telefono" required>
 
     <label for="sabor">Sabor del jugo</label>
-    <select id="sabor" required>
+    <select id="sabor" name="sabor" required>
       <option value="">Selecciona</option>
-      <option value="Naranja">Naranja</option>
-      <option value="Mango">Mango</option>
-      <option value="Fresa">Fresa</option>
-      <option value="Piña">Piña</option>
-      <option value="Melón">Melón</option>
-      <option value="Kiwi">Kiwi</option>
-      <option value="Limón con chía">Limón con chía</option>
+      <option value="naranja">Naranja</option>
+      <option value="mango">Mango</option>
+      <option value="fresa">Fresa</option>
+      <option value="piña">Piña</option>
+      <option value="melón">Melón</option>
+      <option value="kiwi">Kiwi 2</option>
+      <option value="limón con chia">Limón con chia</option>
     </select>
 
     <label for="tamano">Tamaño</label>
-    <select id="tamano" required>
+    <select id="tamano" name="tamano" required>
       <option value="">Selecciona</option>
-      <option value="Chico">Chico</option>
-      <option value="Mediano">Mediano</option>
-      <option value="Grande">Grande</option>
+      <option value="chico">Chico</option>
+      <option value="mediano">Mediano</option>
+      <option value="grande">Grande</option>
     </select>
 
     <label for="comentarios">Comentarios adicionales</label>
-    <textarea id="comentarios" rows="3"></textarea>
+    <textarea id="comentarios" name="comentarios" rows="3"></textarea>
 
     <button type="submit">Enviar Pedido</button>
   </form>
@@ -119,23 +119,23 @@
 
       fetch(API_URL, {
         method: "POST",
-        body: JSON.stringify(datos),
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify(datos)
       })
       .then(r => r.json())
       .then(res => {
         if (res.status === "success") {
-          document.getElementById("mensaje").innerText = "✅ Pedido enviado. Pasa a recogerlo en 10 minutos.";
+          document.getElementById("mensaje").innerText = "✅ Tu pedido ha sido enviado con éxito, pasa a recogerlo en 10 minutos. ¡Gracias!";
           document.getElementById("pedidoForm").reset();
           cargarPedidos();
         } else {
-          document.getElementById("mensaje").innerText = "⚠️ Error: " + (res.message || "Intenta de nuevo.");
+          document.getElementById("mensaje").innerText = "⚠️ Error: " + res.message;
         }
       })
       .catch(err => {
-        console.error(err);
+        console.error("FALLO:", err);
         document.getElementById("mensaje").innerText = "❌ Error al conectar con el servidor.";
       });
     });
@@ -151,7 +151,7 @@
             div.className = "pedido";
             div.innerHTML = `
               <strong>${p["Nombre del cliente"]}</strong> pidió <em>${p["Sabor del jugo"]}</em> (${p["Tamaño"]})<br>
-              Tel: ${p["Teléfono"]} <br>
+              Tel: ${p["Teléfono"]}<br>
               Comentarios: ${p["Comentarios adicionales"] || "Ninguno"}<br>
               Fecha: ${new Date(p["Fecha"]).toLocaleString()}
             `;
@@ -159,7 +159,7 @@
           });
         })
         .catch(err => {
-          console.error(err);
+          console.error("FALLO GET:", err);
           document.getElementById("listaPedidos").innerHTML = "<p>Error al cargar los pedidos.</p>";
         });
     }
@@ -168,4 +168,5 @@
   </script>
 </body>
 </html>
+
 
